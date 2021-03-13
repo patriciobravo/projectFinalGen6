@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "ng-gen6": {
+      "hosting": {
+        "projectFinalGen6": [
+          "ng-gen6"
+        ]
+      }
+    }
+  }
+}
