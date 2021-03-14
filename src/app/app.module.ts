@@ -11,17 +11,26 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule} from '@angular/fire/auth';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import { SendEmailComponent } from './auth/send-email/send-email.component';
-import { AuthService } from './auth/services/auth.service';
-import { CanEditGuard } from './auth/guards/can-edit.guard';
-import { CanAdminGuard } from './auth/guards/can-admin.guard';
-import { CanSuscriptorGuard} from './auth//guards/can-suscriptor.guard';
+import { AuthService } from './services/auth/auth.service';
+import { ContainerAppComponent } from './components/pages/container-app/container-app.component';
+import { NewPostComponent } from './components/pages/posts/new-post/new-post.component';
+import { NewPostModule } from './components/pages/posts/new-post/new-post.module';
+import { PostComponent } from './components/pages/posts/post/post.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material.module';
+
+
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SendEmailComponent,
-  //  NavbarComponent
+    ContainerAppComponent,
+    NewPostComponent,
+    PostComponent,
+ 
   ],
   imports: [
     BrowserModule,
@@ -29,10 +38,13 @@ import { CanSuscriptorGuard} from './auth//guards/can-suscriptor.guard';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule
-
+    AngularFirestoreModule,
+    NewPostModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+ 
   ],
-  providers: [AuthService, CanEditGuard, CanAdminGuard, CanSuscriptorGuard],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

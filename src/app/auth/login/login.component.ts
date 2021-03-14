@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.interface';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -38,13 +38,18 @@ export class LoginComponent implements OnInit {
     const {email, password} = this.loginForm.value;
     try {
 
-      const user = await this.authSvc.login(email, password);
-      
-      if(user) {
+      const user = await this.authSvc.login(email, password).then(
+        response => {
+          console.log('hola')
+          if(response) {
      
-       this.checkUserIsVerified(user);
+            this.checkUserIsVerified(response);
+           
+           }
+        }
+      );
       
-      }
+    
  
     }catch ( error) {
       console.log(error)

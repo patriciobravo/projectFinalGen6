@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth/services/auth.service';
-
+import { AuthService } from '../services/auth/auth.service';
+import  Swal  from 'sweetalert2';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,13 +23,21 @@ export class LoggedGuard implements CanActivate {
         }
         else{
           this.logged = false;
-          window.alert('Permiso denegado');
+          Swal.fire({
+            title:'Acceso Denegado!',
+            text: 'No puedes acceder',
+            icon: 'warning'
+          });
           this.router.navigate(['/login']);
         }
        
       }).catch(error => {
         console.log(error)
-        window.alert('Permiso denegado');
+        Swal.fire({
+          title:'Acceso Denegado!',
+          text: 'No puedes acceder',
+          icon: 'warning'
+        });
         this.router.navigate(['/login']);
         this.logged = false;
       

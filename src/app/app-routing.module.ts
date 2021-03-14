@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CanAdminGuard } from './auth/guards/can-admin.guard';
-import { CanEditGuard } from './auth/guards/can-edit.guard';
-import { CanSuscriptorGuard } from './auth/guards/can-suscriptor.guard';
 
 import { SendEmailComponent } from './auth/send-email/send-email.component';
 import { LoggedGuard } from './guards/logged.guard';
-
+import { ContainerAppComponent} from '../app/components/pages/container-app/container-app.component'
+import { PostComponent } from './components/pages/posts/post/post.component';
 
 const routes: Routes = [
   {
@@ -14,9 +12,19 @@ const routes: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
+  {
+    path: '', component: ContainerAppComponent,
+    children:[
+      { 
+        path: 'home', 
+        loadChildren: () => import('./components/home/home.module').then(m => m.HomeModule),
+        canActivate:[LoggedGuard]
+      }, 
+    ]
+  },
   
   { path: 'home', 
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    loadChildren: () => import('./components/home/home.module').then(m => m.HomeModule),
     canActivate:[LoggedGuard]
   }, 
   { 
@@ -30,16 +38,12 @@ const routes: Routes = [
     path: 'verification-email', component: SendEmailComponent 
   },
   { path: 'forgot-password', loadChildren: () => import('./auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule) },
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-  canActivate:[CanAdminGuard] 
-  },
-  
-  { path: 'editor', loadChildren: () => import('./editor/editor.module').then(m => m.EditorModule),
-    canActivate:[CanEditGuard] 
-  },
-  { path: 'suscriptor', loadChildren: () => import('./suscriptor/suscriptor.module').then(m => m.SuscriptorModule),
-  canActivate:[CanSuscriptorGuard] 
+  { path: 'profile', loadChildren: () => import('./components/pages/profile/profile.module').then(m => m.ProfileModule) },
+  { path: 'home', loadChildren: () => import('./components/pages/home/home.module').then(m => m.HomeModule) },
+  {
+    path: 'posts/:id', component: PostComponent
   }
+
 ];
 
 @NgModule({

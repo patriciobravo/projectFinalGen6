@@ -1,4 +1,4 @@
-export type Roles = 'SUSCRIPTOR' | 'EDITOR' | 'ADMIN';
+
 
 export interface User {
 
@@ -7,6 +7,8 @@ export interface User {
     displayName?: string;
     emailVerified: boolean;
     password?: string;
-    role?: Roles;
+    photoURL?: string;   
+    phoneNumber?: string;
+    
 }
 
