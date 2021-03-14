@@ -10,31 +10,37 @@ import { User } from '../models/user.interface';
 
 })
 export class NavbarComponent {
-  //public isLogged = false;
+  public isLogged = false;
   //public user: any;
   public user$: Observable<User> = this.authSvc.afAuth.user;
 
   constructor( private authSvc: AuthService, private router: Router ) { }
 
-  // async ngOnInit() {
+  async ngOnInit() {
 
+  
+    // this.user = await this.authSvc.getCurrentUser();
 
-  //   // this.user = await this.authSvc.getCurrentUser();
-
-  //   // if(this.user) {
-  //   //   this.isLogged = true;
-  //   //   console.log('User =>', this.user)
-  //   // }
-  // }
+    // if(this.user) {
+    //   this.isLogged = true;
+    //   console.log('User =>', this.user)
+    // }
+  }
 
   async onLogout(){
    
     try {
       await this.authSvc.logout();
       this.router.navigate(['/login']);
+      
     } catch (error) {
       console.log(error)
     }
   }
+
+
+
+  
+  
 
 }

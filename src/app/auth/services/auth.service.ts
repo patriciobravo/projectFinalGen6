@@ -15,6 +15,7 @@ export class AuthService  extends RoleValidator{
 
   constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
       super();
+
       this.user$ = this.afAuth.authState.pipe(
         switchMap( user => {
 
@@ -41,6 +42,10 @@ export class AuthService  extends RoleValidator{
     try {
       
       const {user} = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+      if (user)
+        {
+          localStorage.setItem('email', user.email)
+        }
       this.updateUserData(user);
       return user;
 
@@ -67,7 +72,8 @@ export class AuthService  extends RoleValidator{
   async logout():Promise<void>{
 
     try {
-      await this.afAuth.auth.signOut();
+        await this.afAuth.auth.signOut();
+        localStorage.removeItem('email');
     } catch (error) {
       console.log('Logout', error)
     }
@@ -90,4 +96,12 @@ export class AuthService  extends RoleValidator{
     return userRef.set(data, { merge: true });
   }
 
+  async currentUser(){
+    try {
+      const responseCurrent = this.afAuth.auth.currentUser;
+      return responseCurrent;
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }

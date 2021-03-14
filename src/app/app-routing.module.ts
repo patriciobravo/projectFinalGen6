@@ -3,7 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { CanAdminGuard } from './auth/guards/can-admin.guard';
 import { CanEditGuard } from './auth/guards/can-edit.guard';
 import { CanSuscriptorGuard } from './auth/guards/can-suscriptor.guard';
+
 import { SendEmailComponent } from './auth/send-email/send-email.component';
+import { LoggedGuard } from './guards/logged.guard';
 
 
 const routes: Routes = [
@@ -14,10 +16,12 @@ const routes: Routes = [
   },
   
   { path: 'home', 
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule) 
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    canActivate:[LoggedGuard]
   }, 
   { 
-    path: 'login', loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule) 
+    path: 'login', loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule)
+   
   }, 
   { 
     path: 'register', loadChildren: () => import('./auth/register/register.module').then(m => m.RegisterModule) 

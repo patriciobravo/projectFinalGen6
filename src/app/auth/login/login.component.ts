@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.interface';
 import { AuthService } from '../services/auth.service';
@@ -12,15 +12,25 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
+  get password() { return this.loginForm.get('password')};
+  get email() { return this.loginForm.get('email')};
+
   loginForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required),
   })
 
   constructor( private authSvc: AuthService, private router: Router ) { }
 
   ngOnInit(): void {
-
+    // if(localStorage.getItem('email'))
+    //   {
+    //     this.router.navigate(['/home']);
+    //   }
+    // else{
+    //   console.log('no conectado')
+    // }
+  
   }
 
   async onLogin(){
@@ -29,8 +39,11 @@ export class LoginComponent implements OnInit {
     try {
 
       const user = await this.authSvc.login(email, password);
+      
       if(user) {
-        this.checkUserIsVerified(user);
+     
+       this.checkUserIsVerified(user);
+      
       }
  
     }catch ( error) {
@@ -43,6 +56,7 @@ export class LoginComponent implements OnInit {
     {
       //Redirect to home
       this.router.navigate(['/home']);
+      
 
     }
     else if(user){
