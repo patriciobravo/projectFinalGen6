@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserI } from 'src/app/shared/models/user.interface';
 
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
+
+import  Swal  from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -14,9 +16,12 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
+  get email() { return this.registerForm.get('email') };
+  get password() { return this.registerForm.get('password') };
+
   registerForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
   constructor( private authSvc: AuthService, private router: Router ) { }
 
@@ -31,7 +36,9 @@ export class RegisterComponent implements OnInit {
       const user = await this.authSvc.register(email, password);
 
       if(user){
-        //this.router.navigate(['/verification-email']);
+       // this.router.navigate(['/verification-email']);
+        //console.log(user)
+        
        this.checkUserIsVerified(user)
       }
     } catch (error) {
@@ -49,7 +56,7 @@ export class RegisterComponent implements OnInit {
     }
     else if(user){
       this.router.navigate(['/verification-email'])
-    }
+      }
     else{
       this.router.navigate(['/register'])
     }

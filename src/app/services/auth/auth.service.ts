@@ -2,20 +2,27 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore'
 // import {auth} from 'firebase/app';
 // import {User} from 'firebase';
-import { switchMap} from 'rxjs/operators';
+import { finalize, switchMap} from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
 import { UserI } from 'src/app/shared/models/user.interface';
 
+import  Swal  from 'sweetalert2';
+
 import * as firebase from 'firebase';
+import { FileI } from 'src/app/shared/models/file.interface';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
   public user$: Observable<UserI>;
   public userData$: Observable<firebase.User>;
+  public cargando: any;
 
-  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
+  private filePath: string;
+
+  constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore,  private storage: AngularFireStorage) {
      
 
       this.userData$ = afAuth.authState;
@@ -109,17 +116,68 @@ export class AuthService {
     }
   }
 
-  saveProfileUser(user: UserI) {
-   this.afAuth.auth.currentUser.updateProfile({
-     displayName: user.displayName,
-     photoURL: user.photoURL
-   }).then(()=> console.log('actualizado'))
-   .catch(err => console.log(err));
-  }
-
+ 
   loginByEmail(user: UserI){
     const { email, password} = user;
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
  
+  }
+
+  preSaveUserProfile(user: UserI, image?: FileI):void {
+    this.cargando = true;
+    if(image) {
+      this.uploadImage(user, image);
+    }
+    else{
+      this.saveProfileUser(user);
+    }
+  }
+
+  // private saveProfileUser(user: UserI) {
+  //  this.afAuth.auth.currentUser.updateProfile({
+  //    displayName: user.displayName,
+  //    photoURL: user.photoURL
+  //  }).then(()=> {
+  //   Swal.fire({
+  //     title:'Muy Bien!',
+  //     text: 'Perfil Actualizado',
+  //     icon: 'success'
+  //   });
+  //  })
+  //  .catch(err => console.log(err));
+  // }
+
+  private saveProfileUser(user: UserI) {
+    this.afAuth.auth.currentUser.updateProfile({
+      displayName: user.displayName,
+      photoURL: user.photoURL
+    })
+      .then((resp) => {
+        Swal.fire({
+              title:'Muy Bien!',
+              text: 'Perfil Actualizado',
+              icon: 'success'
+            });
+            return resp;
+      }
+      )
+      .catch(err => console.log('Error', err));
+  }
+
+
+  
+  private uploadImage(user: UserI, image: FileI): void {
+    this.filePath = `images/${image.name}`;
+    const fileRef = this.storage.ref(this.filePath);
+    const task = this.storage.upload(this.filePath, image);
+    task.snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe(urlImage => {
+            user.photoURL = urlImage;
+            this.saveProfileUser(user);
+          });
+        })
+      ).subscribe();
   }
 }

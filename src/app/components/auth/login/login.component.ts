@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { UserI } from 'src/app/shared/models/user.interface';
 import { AuthService } from '../../../services/auth/auth.service';
 
+import  Swal  from 'sweetalert2';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,12 +28,49 @@ export class LoginComponent implements OnInit {
   }
 
 
-  onLogin(form) {
-    this.authSvc.loginByEmail(form)
-    .then(resp => { 
-      console.log(resp) 
-      this.router.navigate(['/home'])
-    }).catch(err => console.log(err))
+  async onLogin(){
+
+    const {email, password} = this.loginForm.value;
+    try {
+
+      const user = await this.authSvc.login(email, password).then(
+        response => {
+          if(response) {
+     
+            this.checkUserIsVerified(response);
+           
+           }
+        }
+      );
+      
+    
+ 
+    }catch ( error) {
+      console.log(error)
+    }
+  }
+
+  private checkUserIsVerified(user: UserI){
+    if(user && user.emailVerified)
+    {
+      //Redirect to home
+      this.router.navigate(['/home']);
+      
+
+    }
+    else if(user){
+      //this.router.navigate(['/verification-email'])
+      this.authSvc.sendVerificationEmail();
+      Swal.fire({
+              title:'Registro no verificado!',
+              text: 'Te hemos vuelto a enviar un email para activar tu cuenta',
+              icon: 'warning'
+            });
+    }
+    else{
+      this.router.navigate(['/register'])
+    }
+
 
   }
 

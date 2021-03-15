@@ -1,6 +1,7 @@
 <mat-toolbar color="primary">
     <a routerLink="/home">{{ appName }} home</a>
     <span class="fill-remaining-space"></span>
+  
     <a routerLink="/albums" routerLinkActive="active" *ngIf="authSvc.userData$ | async">
       <button mat-button>Mi Biblioteca </button>
     </a>
@@ -11,8 +12,8 @@
  
   
   
-    <a *ngIf="authSvc.userData$ | async; else showLogin" (click)="onLogout()">
-      <button mat-button>Logout</button>
+    <a *ngIf="authSvc.userData$ | async; else showLogin" routerLinkActive="active" (click)="onLogout()">
+      <button class="logout" mat-button>Logout</button>
     </a>
   
     <ng-template #showLogin>

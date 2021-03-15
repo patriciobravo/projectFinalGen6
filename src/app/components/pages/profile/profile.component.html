@@ -1,7 +1,16 @@
 <form (ngSubmit) ="onSaveProfile(profileForm.value)" [formGroup]="profileForm">
     <div class="container profile-card">
         <div class="card mt-5">
-            <img class="card-img-top d-flex w-50 mr-auto ml-auto mt-3" src="https://picsum.photos/200" alt="Card image cap">
+            <div class="label bottom">
+                <p>Cambiar Imagen</p>
+                <img class="card-img-top d-flex w-50 mr-auto ml-auto mt-3" [src]="currentImage" (click)="inputImageProfile.click()" alt="Card image cap">
+                <p>Cambiar Imagen</p>
+                <input hidden type="file"
+                #inputImageProfile
+                formControName="photoURL"
+                (change) ="handleImage( ($event?.target?.files)[0])"
+                >
+            </div>
             <div class="card-body">
                 <h3 class="card-title text-center">Mi Perfil!</h3>
                 <div class="form-group mt-2">

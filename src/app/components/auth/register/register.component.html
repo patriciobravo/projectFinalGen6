@@ -12,6 +12,12 @@
                     formControlName="email"
                 >
             </div>
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" >
+              
+                <p *ngIf="email.errors.required" class="text-danger">Debes Ingresar tu Email</p>
+                <p *ngIf="email.errors.email" class="text-danger">Formato Erroneo</p>
+
+            </div>  
         </div>
         <div class="form-group">
             <div class="input-group">
@@ -23,6 +29,12 @@
                     placeholder="Ingresa tu Contraseña"
                     formControlName="password"
                 >
+            </div>
+            <div *ngIf="password.invalid && (password.dirty || password.touched)" >
+              
+                <p *ngIf="password.errors.required" class="text-danger">Debes Ingresar tu contraseña</p>
+                <p *ngIf="password.errors.minlength" class="text-danger">Debes Ingresar a lo menos 6 digitos</p>
+
             </div>
         </div>        
         <div class="form-group">
