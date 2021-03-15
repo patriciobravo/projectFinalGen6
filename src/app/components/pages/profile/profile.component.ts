@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService } from '../../../services/auth/auth.service'
 import {FormGroup, FormControl, Validators} from '@angular/forms';
-import { User} from '../../../shared/models/user.interface'
+import { UserI} from '../../../shared/models/user.interface'
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -24,13 +24,13 @@ export class ProfileComponent implements OnInit {
     })
   }
 
-  onSaveProfile(user: User){
+  onSaveProfile(user: UserI){
 
     this.authSvc.saveProfileUser(user)
   }
 
 
-  private initValuesForm(user: User): void{
+  private initValuesForm(user: UserI): void{
 
     this.profileForm.patchValue({
       displayName: user.displayName,

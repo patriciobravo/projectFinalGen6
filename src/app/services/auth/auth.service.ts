@@ -5,14 +5,14 @@ import { AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firesto
 import { switchMap} from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
-import { User } from 'src/app/shared/models/user.interface';
+import { UserI } from 'src/app/shared/models/user.interface';
 
 import * as firebase from 'firebase';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-  public user$: Observable<User>;
+  public user$: Observable<UserI>;
   public userData$: Observable<firebase.User>;
 
   constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
@@ -24,7 +24,7 @@ export class AuthService {
         switchMap( user => {
 
           if(user) {
-            return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+            return this.afs.doc<UserI>(`users/${user.uid}`).valueChanges();
           }
           return of(null);
         })
@@ -42,7 +42,7 @@ export class AuthService {
       return (await this.afAuth.auth.currentUser).sendEmailVerification();
   }
 
-  async login(email:string, password: string): Promise<User>{
+  async login(email:string, password: string): Promise<UserI>{
     try {
       
       const {user} = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
@@ -58,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string): Promise<User>{
+  async register(email: string, password: string): Promise<UserI>{
     try {
       
       const {user} = await this.afAuth.auth.createUserWithEmailAndPassword(
@@ -84,12 +84,12 @@ export class AuthService {
 
   }
 
-  private updateUserData(user: User) {
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(
+  private updateUserData(user: UserI) {
+    const userRef: AngularFirestoreDocument<UserI> = this.afs.doc(
       `users/${user.uid}`
     );
 
-    const data: User = {
+    const data: UserI = {
       uid: user.uid,
       email: user.email,
       emailVerified: user.emailVerified,
@@ -109,11 +109,17 @@ export class AuthService {
     }
   }
 
-  saveProfileUser(user: User) {
+  saveProfileUser(user: UserI) {
    this.afAuth.auth.currentUser.updateProfile({
      displayName: user.displayName,
      photoURL: user.photoURL
    }).then(()=> console.log('actualizado'))
    .catch(err => console.log(err));
+  }
+
+  loginByEmail(user: UserI){
+    const { email, password} = user;
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+ 
   }
 }

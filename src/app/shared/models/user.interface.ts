@@ -1,6 +1,6 @@
 
 
-export interface User {
+export interface UserI {
 
     uid: string;
     email: string;

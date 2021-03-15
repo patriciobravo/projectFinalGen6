@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/shared/models/user.interface';
+import { UserI } from 'src/app/shared/models/user.interface';
 
 import { AuthService } from '../../services/auth/auth.service';
 
@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
 
   }
 
-  private checkUserIsVerified(user: User){
+  private checkUserIsVerified(user: UserI){
     if(user && user.emailVerified)
     {
       //Redirect to home

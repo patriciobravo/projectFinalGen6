@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AlbumService} from '../../../services/albums/albums.service';
+import { AlbumI } from '../../../shared/models/album.interface';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  public albums$ : Observable<AlbumI[]>;
+  
+  constructor(private albumSvc: AlbumService) { }
 
   ngOnInit() {
+    this.albums$ = this.albumSvc.getAllAlbums();
   }
 
 }

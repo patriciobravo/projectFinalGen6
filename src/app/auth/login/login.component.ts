@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/shared/models/user.interface';
+import { UserI } from 'src/app/shared/models/user.interface';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit {
 
       const user = await this.authSvc.login(email, password).then(
         response => {
-          console.log('hola')
           if(response) {
      
             this.checkUserIsVerified(response);
@@ -56,7 +55,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  private checkUserIsVerified(user: User){
+  private checkUserIsVerified(user: UserI){
     if(user && user.emailVerified)
     {
       //Redirect to home
