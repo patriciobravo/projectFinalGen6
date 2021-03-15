@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth.service';
-import { FormControl } from '@angular/forms';
+
 import { Router } from '@angular/router';
 import  Swal  from 'sweetalert2';
-
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -13,7 +13,12 @@ import  Swal  from 'sweetalert2';
 })
 export class ForgotPasswordComponent implements OnInit {
 
-  userEmail = new FormControl('');
+  get userEmail() { return this.forgotForm.get('userEmail')};
+
+  forgotForm = new FormGroup({
+    userEmail: new FormControl('', [Validators.required, Validators.email]),
+  
+  })
 
   constructor(private authSvc: AuthService, private router:Router) { }
 
